@@ -1,0 +1,21 @@
+{
+  "development": {
+    "username": "Klaaw",
+    "password": "dsd445a",
+    "database": "blog1",
+    "host": "127.0.0.1",
+    "port": 5432,
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "Klaaw",
+    "password": "dsd445a",
+    "database": "blog1",
+    "host": "127.0.0.1",
+    "port": 5432,
+    "dialect": "postgres"
+  },
+  "production": {
+    "dialect": "postgres"
+  }
+}
