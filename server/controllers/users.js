@@ -1,5 +1,4 @@
 const Users = require('../models').User;
-const TodoItem = require('../models').TodoItem;
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const cfg = require('../../config');
@@ -114,10 +113,11 @@ module.exports =  {
     },
 
     profil(req, res) {
-        jwt.verify(req.query.token, cfg.secret, function(err, decoded) {
-            if(err){res.status(400).send(err);}
+    //    jwt.verify(req.query.token, cfg.secret, function(err, decoded) {
+   //         if(err){res.status(400).send(err);}
+        console.log(req.decoded.id, ': req.decoded.id');
         return Users
-            .findById(decoded.id)
+            .findById(req.decoded.id)
             .then(user => {
                 if (!user) {
                     return res.status(404).send({
@@ -127,15 +127,13 @@ module.exports =  {
                 return res.status(200).send(user);
             })
             .catch(error => res.status(400).send(error));
-    })
+   // })
     },
 
     updateProfil(req, res) {
-        jwt.verify(req.query.token, cfg.secret, function(err, decoded) {
-            if (err) {res.status(400).send(err);}
 
                 return Users
-                    .findById(decoded.id)
+                    .findById(req.decoded.id)
                     .then(user => {
                         if (!user) {
                             return res.status(404).send({
@@ -147,18 +145,14 @@ module.exports =  {
                                 username: req.body.username || user.dataValues.username,
                                 email: req.body.email || user.dataValues.email,
                             })
-                            .then(() => res.status(200).send(user))  // Send back the updated todo.
+                            .then(() => res.status(200).send(user))
                             .catch((error) => {console.log(error); res.status(400).send(error)});
                     })
                     .catch((error) => {console.log(error); res.status(400).send(error)});
-        });
     },
 
     update(req, res) {
-        jwt.verify(req.query.token, cfg.secret, function(err, decoded) {
-            if (err) {res.status(400).send(err);}
 
-            if(decoded.admin === true) {
                 return Users
                     .findById(req.params.idUser)
                     .then(user => {
@@ -177,17 +171,10 @@ module.exports =  {
                             .catch((error) => {console.log(error); res.status(400).send(error)});
                     })
                     .catch((error) => {console.log(error); res.status(400).send(error)});
-            } else {
-                res.sendStatus(401);
-            }
-        });
     },
 
     destroy(req, res) {
-        jwt.verify(req.query.token, cfg.secret, function(err, decoded) {
-            if (err) {res.status(400).send(err);}
 
-            if(decoded.admin === true) {
                 return Users
                     .findById(req.params.idUser)
                     .then(user => {
@@ -202,35 +189,24 @@ module.exports =  {
                             .catch(error => res.status(400).send(error));
                     })
                     .catch(error => res.status(400).send(error));
-            }
-          })
     },
 
     destroyProfil(req, res) {
-        jwt.verify(req.query.token, cfg.secret, function(err, decoded) {
-            if (err) {res.status(400).send(err);}
 
                 return Users
-                    .findById(decoded.id)
+                    .findById(req.decoded.id)
                     .then(user => {
                         if (!user) {
                             return res.status(400).send({
                                 message: 'User Not Found',
                             });
                         }
-                        let password = req.body.password;
-                        bcrypt.compare(password, user[0].dataValues.password).then(compare => {
-                            console.log('la response', compare);
-                            if (user && compare === true) {
                                 return user
                                     .destroy()
                                     .then(() => res.status(204).send())
                                     .catch(error => res.status(400).send(error));
-                            }
-                        })
                     })
                     .catch(error => res.status(400).send(error));
-        })
     },
 };/**
  * Created by Klaaw on 04/12/2017.
