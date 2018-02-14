@@ -19,18 +19,17 @@ module.exports =  {
             }).then(user => {
 
                 bcrypt.compare(password, user[0].dataValues.password).then(compare => {
-                    console.log('la response',compare);
 
                     if (user && compare === true) {
                         let payload = {
                             id: user[0].dataValues.id,
                             admin: user[0].dataValues.admin,
                         };
-                        console.log('fffffffffffffffffffffdsssssssssss',payload);
+
                         let token = jwt.sign(payload, cfg.secret, {
                             expiresIn: 60 * 120 // expires in 24 hours
                         });
-                        console.log(token);
+
                         res.json({
                             success: true,
                             message: 'Enjoy your token!',
@@ -49,9 +48,6 @@ module.exports =  {
 
     create(req, res) {
 
-        jwt.verify(req.query.token, cfg.secret, function(err, decoded) {
-            if(err){res.status(400).send(err);}
-            if (decoded.admin === true) {
                 let password = req.body.password;
                 bcrypt.hash(password, 5).then(hashPassword => {
                     return Users
@@ -65,10 +61,6 @@ module.exports =  {
                         .catch(error => res.status(400).send(error));
                 })
                     .catch(error => res.status(201).send(error));
-            } else {
-                res.sendStatus(401);
-            }
-        })
     },
 
     inscription(req, res) {
