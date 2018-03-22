@@ -23,6 +23,14 @@ module.exports = {
       admin: {
           type: Sequelize.BOOLEAN,
       },
+      token: {
+          type: Sequelize.STRING,
+          allowNull: true,
+    },
+      verif: {
+          type: Sequelize.BOOLEAN,
+          allowNull: true,
+      },
         createdAt: {
         allowNull: false,
         type: Sequelize.DATE

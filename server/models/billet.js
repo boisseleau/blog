@@ -1,4 +1,5 @@
 'use strict';
+const Comments = require('../models').Comments;
 module.exports = (sequelize, DataTypes) => {
   const Billet = sequelize.define('Billet', {
     picture: {
@@ -21,18 +22,17 @@ module.exports = (sequelize, DataTypes) => {
     }
   });
 
-    Billet.associate = (models) => {
-        Billet.belongsTo(models.User, {
-            foreignKey: 'userId',
-            onDelete: 'CASCADE',
-        });
-    };
 
     Billet.associate = (models) => {
         Billet.hasMany(models.Comments, {
             foreignKey: 'billetId',
             as: 'comments',
         });
+        Billet.belongsTo(models.User, {
+            foreignKey: 'userId',
+            onDelete: 'CASCADE',
+        });
     };
+ 
   return Billet;
 };

@@ -22,12 +22,34 @@ const upload = multer({storage: storage});
 
 
 module.exports = (app) => {
+
+    app.use(function (req, res, next) {
+
+        // Website you wish to allow to connect
+        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+    
+        // Request methods you wish to allow
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    
+        // Request headers you wish to allow
+        res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    
+        // Set to true if you need the website to include cookies in the requests sent
+        // to the API (e.g. in case you use sessions)
+        res.setHeader('Access-Control-Allow-Credentials', true);
+    
+        // Pass to next layer of middleware
+        next();
+    });
+
     app.get('/api', (req, res) => res.status(200).send({
-        message: 'Welcome to the Todos API!',
+        message: 'Welcome !',
     }));
 
 
     app.post('/api/inscription', usersController.inscription);
+    app.post('/api/send', usersController.send);
+    app.get('/api/verify', usersController.verify);
     app.post('/api/login', usersController.connexion);
 
     app.get('/api/article', billetController.list);
@@ -81,7 +103,7 @@ module.exports = (app) => {
 
                     return res.status(401).send({
                         success: false,
-                        message: 'Vous n\'avez pas accès à cette page'
+                        message: 'Have dont you acces to this page !'
                     });
 
                 }

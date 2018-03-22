@@ -9,7 +9,7 @@ module.exports = {
                 billetId: req.params.idBillet,
                 userId: req.decoded.id,
             })
-            .then(comment => {console.log(comment); res.status(201).send(comment)})
+            .then(comment => res.status(201).send(comment))
             .catch(error => res.status(400).send(error));
     },
 
@@ -18,7 +18,8 @@ module.exports = {
             .find({
                 where: {
                     id: req.params.commentId,
-                    todoId: req.params.billetId,
+                    billetId: req.params.billetId,
+                    userId: req.decoded.id,
                 },
             })
             .then(comment => {
@@ -40,21 +41,21 @@ module.exports = {
     },
 
     destroy(req, res) {
-        return TodoItem
+        return Comments
             .find({
                 where: {
-                    id: req.params.todoItemId,
-                    todoId: req.params.todoId,
+                    id: req.params.commentId,
+                    billetId: req.params.billetId,
                 },
             })
-            .then(todoItem => {
-                if (!todoItem) {
+            .then(comment => {
+                if (!comment) {
                     return res.status(404).send({
-                        message: 'TodoItem Not Found',
+                        message: 'comment Not Found',
                     });
                 }
 
-                return todoItem
+                return comment
                     .destroy()
                     .then(() => res.status(204).send())
                     .catch(error => res.status(400).send(error));
