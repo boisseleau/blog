@@ -4,7 +4,7 @@ const Comments = require('../models').Comments;
 
 module.exports = {
     create(req, res) {
-        console.log(Billet);
+        console.log(req.decoded.id);
             return Billet
                 .create({
                     picture: req.file.destination + '/' + req.file.filename,
@@ -12,7 +12,7 @@ module.exports = {
                     content: req.body.content,
                     userId: req.decoded.id,
                 })
-                .then(billet => {console.log(billet); res.status(201).send(billet)})
+                .then(billet => res.status(201).send(billet))
                 .catch(error => res.status(400).send(error));
     },
 
@@ -25,7 +25,7 @@ module.exports = {
                 }],
             })
             .then(billets => res.status(200).send(billets))
-            .catch(error => res.status(400).send(error));
+            .catch(error => {console.log(error); res.status(400).send(error)});
     },
 
     retrieve(req, res) {
