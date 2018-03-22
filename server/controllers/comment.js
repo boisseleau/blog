@@ -7,32 +7,33 @@ module.exports = {
                 author: req.body.author,
                 comment: req.body.comment,
                 billetId: req.params.idBillet,
+                userId: req.decoded.id,
             })
-            .then(comment => res.status(201).send(comment))
+            .then(comment => {console.log(comment); res.status(201).send(comment)})
             .catch(error => res.status(400).send(error));
     },
 
     update(req, res) {
-        return TodoItem
+        return Comments
             .find({
                 where: {
-                    id: req.params.todoItemId,
-                    todoId: req.params.todoId,
+                    id: req.params.commentId,
+                    todoId: req.params.billetId,
                 },
             })
-            .then(todoItem => {
-                if (!todoItem) {
+            .then(comment => {
+                if (!comment) {
                     return res.status(404).send({
-                        message: 'TodoItem Not Found',
+                        message: 'Comment Not Found',
                     });
                 }
 
-                return todoItem
+                return comment
                     .update({
-                        content: req.body.content || todoItem.content,
-                        complete: req.body.complete || todoItem.complete,
+                        comment: req.body.comment || comment.comment,
+                        author: req.body.author || comment.author,
                     })
-                    .then(updatedTodoItem => res.status(200).send(updatedTodoItem))
+                    .then(updatedComment => res.status(200).send(updatedComment))
                     .catch(error => res.status(400).send(error));
             })
             .catch(error => res.status(400).send(error));

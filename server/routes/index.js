@@ -5,6 +5,20 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const cfg = require('../../config');
 
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+    destination: function(req, file, callback) {
+        callback(null, 'server/pictures')
+    },
+    filename: function(req, file, callback) {
+        console.log(file);
+        callback(null, file.originalname )
+    }
+});
+
+const upload = multer({storage: storage});
+
 
 
 module.exports = (app) => {
@@ -88,19 +102,8 @@ module.exports = (app) => {
     app.put('/api/user/:idUser', usersController.update);
     app.delete('/api/user/:idUser/delete', usersController.destroy);
 
-    app.post('/api/article/add', billetController.create);
+    app.post('/api/article/add', upload.single('picture'), billetController.create);
     app.put('/api/article/:idBillet', billetController.update);
     app.delete('/api/article/:idBillet', billetController.destroy);
 
-    //app.use('/api', app);
-
-    /*app.post('/api/todos', todosController.create);
-    app.get('/api/todos', todosController.list);
-    app.get('/api/todos/:todoId', todosController.retrieve);
-    app.put('/api/todos/:todoId', todosController.update);
-    app.delete('/api/todos/:todoId', todosController.destroy);
-
-    app.post('/api/todos/:todoId/items', todoItemsController.create);
-    app.put('/api/todos/:todoId/items/:todoItemId', todoItemsController.update);
-    app.delete('/api/todos/:todoId/items/:todoItemId', todoItemsController.destroy);*/
 };
