@@ -2,14 +2,15 @@ const Users = require('../models').User;
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const cfg = require('../../config');
+const cfgServer = require('../config/config.json');
 const nodemailer = require('nodemailer');
 const Billet= require('../models').Billet;
 
 let smtpTransport = nodemailer.createTransport({
     service: "Gmail",
     auth: {
-        user: "boisseleau85430@gmail.com",
-        pass: "dsd445a889"
+        user: cfgServer.mail.user,
+        pass: cfgServer.mail.password
     }
 });
 let rand,mailOptions,host,link;

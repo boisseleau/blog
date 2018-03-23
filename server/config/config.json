@@ -17,5 +17,10 @@
   },
   "production": {
     "dialect": "postgres"
+  },
+  "mail":{
+    "user": "boisseleau85430@gmail.com",
+    "password": "dsd445a889"
   }
+  
 }
