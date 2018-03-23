@@ -5,15 +5,51 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const cfg = require('../../config');
 
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+    destination: function(req, file, callback) {
+        callback(null, 'server/pictures')
+    },
+    filename: function(req, file, callback) {
+        console.log(file);
+        callback(null, file.originalname )
+    }
+});
+
+const upload = multer({storage: storage});
+
 
 
 module.exports = (app) => {
+
+    app.use(function (req, res, next) {
+
+        // Website you wish to allow to connect
+        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+    
+        // Request methods you wish to allow
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    
+        // Request headers you wish to allow
+        res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    
+        // Set to true if you need the website to include cookies in the requests sent
+        // to the API (e.g. in case you use sessions)
+        res.setHeader('Access-Control-Allow-Credentials', true);
+    
+        // Pass to next layer of middleware
+        next();
+    });
+
     app.get('/api', (req, res) => res.status(200).send({
-        message: 'Welcome to the Todos API!',
+        message: 'Welcome !',
     }));
 
 
     app.post('/api/inscription', usersController.inscription);
+    app.post('/api/send', usersController.send);
+    app.get('/api/verify', usersController.verify);
     app.post('/api/login', usersController.connexion);
 
     app.get('/api/article', billetController.list);
@@ -67,7 +103,7 @@ module.exports = (app) => {
 
                     return res.status(401).send({
                         success: false,
-                        message: 'Vous n\'avez pas accès à cette page'
+                        message: 'Have dont you acces to this page !'
                     });
 
                 }
@@ -88,19 +124,8 @@ module.exports = (app) => {
     app.put('/api/user/:idUser', usersController.update);
     app.delete('/api/user/:idUser/delete', usersController.destroy);
 
-    app.post('/api/article/add', billetController.create);
+    app.post('/api/article/add', upload.single('picture'), billetController.create);
     app.put('/api/article/:idBillet', billetController.update);
     app.delete('/api/article/:idBillet', billetController.destroy);
 
-    //app.use('/api', app);
-
-    /*app.post('/api/todos', todosController.create);
-    app.get('/api/todos', todosController.list);
-    app.get('/api/todos/:todoId', todosController.retrieve);
-    app.put('/api/todos/:todoId', todosController.update);
-    app.delete('/api/todos/:todoId', todosController.destroy);
-
-    app.post('/api/todos/:todoId/items', todoItemsController.create);
-    app.put('/api/todos/:todoId/items/:todoItemId', todoItemsController.update);
-    app.delete('/api/todos/:todoId/items/:todoItemId', todoItemsController.destroy);*/
 };

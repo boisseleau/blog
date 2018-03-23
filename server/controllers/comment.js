@@ -7,53 +7,55 @@ module.exports = {
                 author: req.body.author,
                 comment: req.body.comment,
                 billetId: req.params.idBillet,
+                userId: req.decoded.id,
             })
             .then(comment => res.status(201).send(comment))
             .catch(error => res.status(400).send(error));
     },
 
     update(req, res) {
-        return TodoItem
+        return Comments
             .find({
                 where: {
-                    id: req.params.todoItemId,
-                    todoId: req.params.todoId,
+                    id: req.params.commentId,
+                    billetId: req.params.billetId,
+                    userId: req.decoded.id,
                 },
             })
-            .then(todoItem => {
-                if (!todoItem) {
+            .then(comment => {
+                if (!comment) {
                     return res.status(404).send({
-                        message: 'TodoItem Not Found',
+                        message: 'Comment Not Found',
                     });
                 }
 
-                return todoItem
+                return comment
                     .update({
-                        content: req.body.content || todoItem.content,
-                        complete: req.body.complete || todoItem.complete,
+                        comment: req.body.comment || comment.comment,
+                        author: req.body.author || comment.author,
                     })
-                    .then(updatedTodoItem => res.status(200).send(updatedTodoItem))
+                    .then(updatedComment => res.status(200).send(updatedComment))
                     .catch(error => res.status(400).send(error));
             })
             .catch(error => res.status(400).send(error));
     },
 
     destroy(req, res) {
-        return TodoItem
+        return Comments
             .find({
                 where: {
-                    id: req.params.todoItemId,
-                    todoId: req.params.todoId,
+                    id: req.params.commentId,
+                    billetId: req.params.billetId,
                 },
             })
-            .then(todoItem => {
-                if (!todoItem) {
+            .then(comment => {
+                if (!comment) {
                     return res.status(404).send({
-                        message: 'TodoItem Not Found',
+                        message: 'comment Not Found',
                     });
                 }
 
-                return todoItem
+                return comment
                     .destroy()
                     .then(() => res.status(204).send())
                     .catch(error => res.status(400).send(error));

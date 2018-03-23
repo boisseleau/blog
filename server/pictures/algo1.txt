@@ -1,0 +1,56 @@
+type Pile structure
+	T: Tableau de "cellule"
+	N: Entier
+	S: Entier
+finStructure
+
+algo EstVide:
+   PARAMETRE
+	p:Pile
+
+DEBUT
+
+  Si p.S = 0 alors
+	return true
+  Sinon
+	return false
+FIN
+
+algo EstPleine:
+   PARAMETRE
+	p:Pile
+
+DEBUT
+Si p.S == p.N alors
+	return true
+Sinon
+	return false
+
+FIN
+
+algo EstEmpiler:
+   PARAMETRE
+	p:Pile
+	e: element
+
+DEBUT
+p.T[p.S] = e
+p.S <- p.S + 1
+
+FIN
+
+
+
+
+algo EstDepiler:
+   PARAMETRE
+	p:Pile
+	e: element
+
+DEBUT
+e = p.T[p.S - 1]
+p.S = S - 1
+
+FIN
+
+

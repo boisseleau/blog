@@ -2,7 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
   const Comments = sequelize.define('Comments', {
     author: DataTypes.STRING,
-    comment: DataTypes.TEXT
+    comment: DataTypes.TEXT,
   }, {
     classMethods: {
       associate: function(models) {
@@ -12,15 +12,12 @@ module.exports = (sequelize, DataTypes) => {
   });
 
     Comments.associate = (models) => {
+      Comments.belongsTo(models.User, {
+        foreignKey: 'userId',
+        onDelete: 'CASCADE',
+    });
         Comments.belongsTo(models.Billet, {
             foreignKey: 'billetId',
-            onDelete: 'CASCADE',
-        });
-    };
-
-    Comments.associate = (models) => {
-        Comments.belongsTo(models.User, {
-            foreignKey: 'userId',
             onDelete: 'CASCADE',
         });
     };

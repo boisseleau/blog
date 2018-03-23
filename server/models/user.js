@@ -16,6 +16,14 @@ module.exports = (sequelize, DataTypes) => {
     admin: {
         type: DataTypes.BOOLEAN,
     },
+    token: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    verif: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+    },
   }, {
     classMethods: {
       associate: function(models) {
@@ -29,12 +37,11 @@ module.exports = (sequelize, DataTypes) => {
             foreignKey: 'userId',
             as: 'billet',
         });
-    };
-    User.associate = (models) => {
         User.hasMany(models.Comments, {
             foreignKey: 'userId',
             as: 'comments',
         });
     };
+   
   return User;
 };

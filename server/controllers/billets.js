@@ -1,23 +1,19 @@
 const Billet= require('../models').Billet;
 const Comments = require('../models').Comments;
-const jwt = require('jsonwebtoken');
-const cfg = require('../../config');
 
 
 module.exports = {
     create(req, res) {
-        jwt.verify(req.query.token, cfg.secret, function(err, decoded) {
-            if(err){res.status(400).send(err);}
+        console.log(req.decoded.id);
             return Billet
                 .create({
-                    picture: req.body.picture,
+                    picture: req.file.destination + '/' + req.file.filename,
                     title: req.body.title,
                     content: req.body.content,
-                    userId: decoded.id,
+                    userId: req.decoded.id,
                 })
                 .then(billet => res.status(201).send(billet))
                 .catch(error => res.status(400).send(error));
-        })
     },
 
     list(req, res) {
@@ -28,8 +24,8 @@ module.exports = {
                     as: 'comments',
                 }],
             })
-            .then(todos => res.status(200).send(todos))
-            .catch(error => res.status(400).send(error));
+            .then(billets => res.status(200).send(billets))
+            .catch(error => {console.log(error); res.status(400).send(error)});
     },
 
     retrieve(req, res) {
