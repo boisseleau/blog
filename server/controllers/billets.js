@@ -4,7 +4,10 @@ const Comments = require('../models').Comments;
 
 module.exports = {
     create(req, res) {
-        console.log(req.decoded.id);
+        console.log(req.file);
+        console.log('????'+req);
+        if(req.body.title && req.body.content && req.file){
+           
             return Billet
                 .create({
                     picture: req.file.destination + '/' + req.file.filename,
@@ -14,6 +17,14 @@ module.exports = {
                 })
                 .then(billet => res.status(201).send(billet))
                 .catch(error => res.status(400).send(error));
+            }else{
+                return res.status(400).send({
+                    message: 'Fields Not Found',
+                    picture: req.file || '',
+                    title: req.body.title || '',
+                    content: req.body.content || ''
+                });
+            }
     },
 
     list(req, res) {
