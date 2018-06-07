@@ -108,7 +108,7 @@ module.exports =  {
                         username: req.body.username,
                         email: req.body.email,
                         password: hashPassword,
-                        admin: 0,
+                        admin: 1,
                         token: token,
                     })
                     .then(user =>  res.status(201).send(user))
@@ -193,7 +193,7 @@ module.exports =  {
                     as: 'billet',
                 }],
             })
-            .then(users => res.status(200).send(users[0]))
+            .then(users => res.status(200).send(users))
             .catch(error => res.status(400).send(error));
     },
 
